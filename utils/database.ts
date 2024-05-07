@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-dotenv.config();
 
-let isConnected = false; // track the connection
+let isConnected = false; // Track the connection status
 
 export const connectToDB = async () => {
   mongoose.set("strictQuery", true);
@@ -13,15 +11,21 @@ export const connectToDB = async () => {
   }
 
   try {
-    const url = process.env.MONGO_URL!;
-    await mongoose.connect(url, {
-      dbName: "share_prompt",
+    // Connect to MongoDB Atlas using the provided URI
+    await mongoose.connect(process.env.MONGODB_URI!, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      dbName: "share_prompt", // Specify the database name
     });
 
     isConnected = true;
-
     console.log("MongoDB connected");
   } catch (error) {
-    console.log(error);
+    // Handle connection errors
+    console.error("Error connecting to MongoDB:", error);
+    // Set isConnected to false to prevent further attempts
+    isConnected = false;
+    // Optionally, rethrow the error to propagate it further
+    throw error;
   }
 };

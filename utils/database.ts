@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 let isConnected = false; // Track the connection status
+const uri = process.env.MONGODB_URI || "YOUR_FALLBACK_URI";
 
 export const connectToDB = async () => {
   mongoose.set("strictQuery", true);
@@ -12,10 +13,10 @@ export const connectToDB = async () => {
 
   try {
     // Connect to MongoDB Atlas using the provided URI
-    await mongoose.connect(process.env.MONGODB_URI!, {
+    await mongoose.connect(uri, {
+      dbName: "share_prompt", // Specify the database name
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      dbName: "share_prompt", // Specify the database name
     });
 
     isConnected = true;
